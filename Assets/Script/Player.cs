@@ -5,19 +5,19 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    bool isGamePaused;
+    bool isGamePaused= false;
     List<string> teams;
-    string whoPaused;
-    GameObject teamHolder;
-    List<GameObject> teamsList;
+    int whoPaused;
+    public GameObject teamHolder;
+    List<GameObject> teamsList = new List<GameObject>();
 
 
     // Start is called before the first frame update
     void Start()
     {
-       foreach(GameObject team in teamHolder)
+       foreach(Transform team in teamHolder.transform)
         {
-            teamsList.Add(team);
+            teamsList.Add(team.gameObject);
         }
     }
 
@@ -52,9 +52,37 @@ public class Player : MonoBehaviour
         { TeamPause(13); }
         if (Input.GetButton("T14"))
         { TeamPause(14); }
+        if(Input.GetButton("P1"))
+        {
+            GreatQuestion();
+        }
+        if (Input.GetButton("P2"))
+        {
+            ResetQuestion();
+        }
     }
     void TeamPause(int teamNumber)
     {
-        teamsList.
+        if(isGamePaused)
+        {
+            return;
+        }
+        whoPaused = teamNumber - 1;
+        teamsList[whoPaused].GetComponent<SpriteRenderer>().color = Color.yellow;
+        
+        isGamePaused = true;
+    }
+    private void ResetQuestion()
+    {
+        foreach(GameObject teamIcon in teamsList)
+        {
+            teamIcon.GetComponent<SpriteRenderer>().color = Color.white;
+        }
+        isGamePaused = false;
+    }
+    private void GreatQuestion()
+    {
+        teamsList[whoPaused].GetComponent<SpriteRenderer>().color = Color.green;
+        isGamePaused = false ;
     }
 }
